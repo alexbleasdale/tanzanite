@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+	
+<planets>
+	<planet>
+		<id>1</id>
+		<name>Earth</name>
+		<greeting>hello from earth..</greeting>
+		<contact>info@earth.pl</contact>	
+	</planet>
+	<planet>
+		<id>2</id>
+		<name>The Moon</name>
+		<greeting>aloe from da moon..</greeting>
+		<contact>info@moon.pl</contact>	
+	</planet>
+	<planet>
+		<id>3</id>
+		<name>Venus</name>
+		<greeting>I'm yer venus... I'm the fire...</greeting>
+		<contact>info@venus.pl</contact>	
+	</planet>
+	<planet>
+		<id>4</id>
+		<name>Jupiter</name>
+		<greeting>By Jupiter!...</greeting>
+		<contact>webmaster@jupiter.pl</contact>	
+	</planet>
+</planets>
