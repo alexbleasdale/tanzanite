@@ -1,0 +1,516 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Wedding Quote Generator</title>
+
+<script type="text/javascript">
+// init globals
+var Total = 0;
+var costBase = 0;
+var incrementer = 0;
+var rowTotal;
+var numOfCols;
+var quantities;
+var qModifier;
+var stnryTotal;
+var fvrTotal = 0;
+	
+function addOption(selectbox,text,value){
+	var optn = document.createElement("OPTION");
+	optn.text = text;
+	optn.value = value;
+	selectbox.options[selectbox.length] = (optn);
+}
+	
+	
+function populateQuantities(){
+	for (i=0; i<=350; i+=25){
+		if (i==25){ // at 25, jump to 50 and add Options
+			i+=25;
+			addOption(document.theForm.qtyOne,[i],[i]);
+			addOption(document.theForm.qtyTwo,[i],[i]);
+			addOption(document.theForm.qtyThree,[i],[i]);
+			addOption(document.theForm.qtyFour,[i],[i]);
+			addOption(document.theForm.qtyFive,[i],[i]);
+			addOption(document.theForm.qtySix,[i],[i]);
+			addOption(document.theForm.qtyNine,[i],[i]);
+		} else {
+		addOption(document.theForm.qtyOne,[i],[i]);
+		addOption(document.theForm.qtyTwo,[i],[i]);
+		addOption(document.theForm.qtyThree,[i],[i]);
+		addOption(document.theForm.qtyFour,[i],[i]);
+		addOption(document.theForm.qtyFive,[i],[i]);
+		addOption(document.theForm.qtySix,[i],[i]);
+		addOption(document.theForm.qtyNine,[i],[i]);
+		}
+	}
+	for (i=0; i<=350; i+=50){
+		addOption(document.theForm.qtySeven,[i],[i]);
+	}
+}
+
+function populateFvrQuantities(){
+	// init clear array content to start
+	if (document.theForm.qtyEight.length > 0){
+		document.theForm.qtyEight.length = 0;
+	}
+	
+	if (document.theForm.inkColEight.value > 0){
+		for (i=0; i<=350; i+=25){
+			if (i==25){ // at 25, jump to 100 and add Options
+			i+=75;
+				addOption(document.theForm.qtyEight,[i],[i]);
+			} else {
+				addOption(document.theForm.qtyEight,[i],[i]);
+			}
+		}
+	} else {	
+		for (i=0; i<=350; i+=25){
+			addOption(document.theForm.qtyEight,[i],[i]);
+		}
+	}
+	// if favor total is set, match dropdown to total
+	//if (fvrTotal != 0){document.theForm.qtyEight.value = fvrTotal;}
+}
+
+function populateInkColors(){
+	
+	for (i=1; i<=3; i++){
+		addOption(document.theForm.inkColOne,[i],[i]);
+		addOption(document.theForm.inkColTwo,[i],[i]);
+		addOption(document.theForm.inkColThree,[i],[i]);
+		addOption(document.theForm.inkColFour,[i],[i]);
+		addOption(document.theForm.inkColFive,[i],[i]);
+		addOption(document.theForm.inkColSix,[i],[i]);
+		addOption(document.theForm.inkColSeven,[i],[i]);
+		addOption(document.theForm.inkColNine,[i],[i]);
+	}
+	
+	for (i=0; i<=2; i++){
+		if (i==0){
+			addOption(document.theForm.inkColEight,"Blank",[0]);
+		} else {
+			addOption(document.theForm.inkColEight,[i],[i]);
+		}
+	}	
+}
+
+
+function calculateRowTotals(value){
+	switch (value)
+	{
+		case 1:
+		numOfCols = document.theForm.inkColOne.value;
+		quantities = document.theForm.qtyOne.value;
+		getCostBase(numOfCols,576,102,756,111,1008,120,0,0,0);		
+		calculateQuantity();
+		document.theForm.rowOne.value = rowTotal;
+		updateTotal();
+		break
+		
+		case 2:
+		numOfCols = document.theForm.inkColTwo.value;
+		quantities = document.theForm.qtyTwo.value;
+		getCostBase(numOfCols,384,87,486,111,670,120,0,0,4);	
+		calculateQuantity();
+		document.theForm.rowTwo.value = rowTotal;
+		updateTotal();
+		break
+		
+		case 3:
+		numOfCols = document.theForm.inkColThree.value;
+		quantities = document.theForm.qtyThree.value;
+		getCostBase(numOfCols,258,42,366,51,546,60,0,0,0);		
+		calculateQuantity(1);
+		document.theForm.rowThree.value = rowTotal;
+		updateTotal();
+		break
+		
+		case 4:
+		numOfCols = document.theForm.inkColFour.value;
+		quantities = document.theForm.qtyFour.value;
+		getCostBase(numOfCols,258,42,366,51,546,60,0,0,0);		
+		calculateQuantity(1);
+		document.theForm.rowFour.value = rowTotal;
+		updateTotal();
+		break
+		
+		case 5:
+		numOfCols = document.theForm.inkColFive.value;
+		quantities = document.theForm.qtyFive.value;
+		getCostBase(numOfCols,258,42,366,51,546,60,0,0,0);		
+		calculateQuantity(1);
+		document.theForm.rowFive.value = rowTotal;
+		updateTotal();
+		break
+		
+		case 6:
+		numOfCols = document.theForm.inkColSix.value;
+		quantities = document.theForm.qtySix.value;
+		getCostBase(numOfCols,258,42,366,51,546,60,0,0,0);		
+		calculateQuantity(1);
+		document.theForm.rowSix.value = rowTotal;
+		updateTotal();
+		break
+		
+		case 7:
+		numOfCols = document.theForm.inkColSeven.value;
+		quantities = document.theForm.qtySeven.value;	
+		calculateStnryQuantity();
+		document.theForm.rowSeven.value = stnryTotal;
+		updateTotal();
+		break
+		
+		case 8:
+		numOfCols = document.theForm.inkColEight.value;
+		quantities = document.theForm.qtyEight.value;
+		// set favor quantities to run from 100 for one and two color tags
+		populateFvrQuantities();
+		calculateFvrQuantity();
+		document.theForm.rowEight.value = fvrTotal;
+		updateTotal();
+		break
+		
+		case 9:
+		numOfCols = document.theForm.inkColNine.value;
+		quantities = document.theForm.qtyNine.value;
+		getCostBase(numOfCols,258,42,366,51,546,60,0,0,0);	
+		calculateQuantity(1);
+		document.theForm.rowNine.value = rowTotal;
+		updateTotal();
+		break
+	}
+}
+
+
+
+function getCostBase(numOfColors,a,b,c,d,e,f,x,y,z){
+	
+	switch (numOfCols)
+	{
+		case "1":
+		costBase = a;
+		incrementer = b;
+		adjustment = x;
+		break
+		case "2":
+		costBase = c;
+		incrementer = d;
+		adjustment = y;
+		break
+		case "3":
+		costBase = e;
+		incrementer = f;
+		adjustment = z;
+		break
+	}	
+	return costBase;
+	return incrementer;
+}
+
+function calculateQuantity(qModifier) {
+
+	switch (quantities)
+	{
+		case "0":  rowTotal = 0; break
+		case "50": rowTotal = costBase; break
+		case "75": rowTotal = costBase + incrementer - adjustment; break
+		case "100": rowTotal = costBase + (incrementer*2) - adjustment; break
+		case "125": rowTotal = costBase + (incrementer*3) - adjustment; break
+		case "150": rowTotal = costBase + (incrementer*4) - adjustment; break
+		case "175": rowTotal = costBase + (incrementer*5) - adjustment; break
+		case "200": rowTotal = costBase + (incrementer*6) - adjustment; break
+		case "225": rowTotal = costBase + (incrementer*7) - adjustment; break
+		case "250": rowTotal = costBase + (incrementer*8) - adjustment; break
+		case "275": rowTotal = costBase + (incrementer*9) - adjustment; break
+		case "300": rowTotal = costBase + (incrementer*10) - adjustment; break
+		case "325": rowTotal = costBase + (incrementer*11) - adjustment; break
+		case "350": rowTotal = costBase + (incrementer*12) - adjustment; break
+	}
+	if (qModifier == 1){
+		switch (quantities)
+		{
+		case "275": rowTotal = costBase + (incrementer*10); break
+		case "300": rowTotal = costBase + (incrementer*12); break
+		case "325": rowTotal = costBase + (incrementer*14); break
+		case "350": rowTotal = costBase + (incrementer*16); break
+		}
+	}
+	return rowTotal;
+}
+
+function calculateStnryQuantity(){
+	var value = document.theForm.inkColSeven.value;
+	switch (value)
+	{
+		case "1":
+			switch (quantities)
+			{
+			case "0":  stnryTotal = 0; break
+			case "50": stnryTotal = 339; break
+			case "100": stnryTotal = 419; break
+			case "150": stnryTotal = 495; break
+			case "200": stnryTotal = 595; break
+			case "250": stnryTotal = 689; break
+			case "300": stnryTotal = 787; break
+			case "350": stnryTotal = 883; break
+			}
+		break
+		case "2":
+			switch (quantities)
+			{
+			case "0":  stnryTotal = 0; break
+			case "50": stnryTotal = 447; break
+			case "100": stnryTotal = 539; break
+			case "150": stnryTotal = 635; break
+			case "200": stnryTotal = 745; break
+			case "250": stnryTotal = 843; break
+			case "300": stnryTotal = 939; break
+			case "350": stnryTotal = 1037; break
+			}
+		break
+		case "3":
+			switch (quantities)
+			{
+			case "0":  stnryTotal = 0; break
+			case "50": stnryTotal = 563; break
+			case "100": stnryTotal = 659; break
+			case "150": stnryTotal = 777; break
+			case "200": stnryTotal = 909; break
+			case "250": stnryTotal = 1029; break
+			case "300": stnryTotal = 1147; break
+			case "350": stnryTotal = 1265; break
+			}
+		break
+	}
+	
+	return stnryTotal;
+}
+
+function calculateFvrQuantity(){
+	var value = document.theForm.inkColEight.value;
+	switch (value)
+	{
+		case "0":
+			fvrTotal = quantities;
+			document.theForm.qtyEight.value = fvrTotal;
+		break
+		case "1":
+			switch (quantities)
+			{
+			case "0": fvrTotal = 0; break
+			case "100": fvrTotal = 197; break
+			case "125": fvrTotal = 227; break
+			case "150": fvrTotal = 257; break
+			case "175": fvrTotal = 287; break
+			case "200": fvrTotal = 317; break
+			case "225": fvrTotal = 334; break
+			case "250": fvrTotal = 351; break
+			case "275": fvrTotal = 375; break
+			case "300": fvrTotal = 399; break
+			case "325": fvrTotal = 425; break
+			case "350": fvrTotal = 450; break
+			}
+			document.theForm.qtyEight.value = quantities;
+		break	
+		case "2":
+			switch (quantities)
+			{
+			case "0": fvrTotal = 0; break
+			case "100": fvrTotal = 297; break
+			case "125": fvrTotal = 327; break
+			case "150": fvrTotal = 357; break
+			case "175": fvrTotal = 387; break
+			case "200": fvrTotal = 417; break
+			case "225": fvrTotal = 434; break
+			case "250": fvrTotal = 451; break
+			case "275": fvrTotal = 469; break
+			case "300": fvrTotal = 487; break
+			case "325": fvrTotal = 517; break
+			case "350": fvrTotal = 547; break
+			}
+			document.theForm.qtyEight.value = quantities;
+		break
+	}
+	
+	return fvrTotal;
+}
+
+function updateTotal(){	
+	r1 = parseFloat(document.theForm.rowOne.value);
+	r2 = parseFloat(document.theForm.rowTwo.value);
+	r3 = parseFloat(document.theForm.rowThree.value);
+	r4 = parseFloat(document.theForm.rowFour.value);
+	r5 = parseFloat(document.theForm.rowFive.value);
+	r6 = parseFloat(document.theForm.rowSix.value);
+	r7 = parseFloat(document.theForm.rowSeven.value);
+	r8 = parseFloat(document.theForm.rowEight.value);
+	r9 = parseFloat(document.theForm.rowNine.value);
+	
+	Total = (r1+r2+r3+r4+r5+r6+r7+r8+r9);
+	document.theForm.Total.value = Total;
+}
+
+// initialize document
+function populate(){
+	populateQuantities();
+	populateFvrQuantities();
+	populateInkColors();
+	document.theForm.rowOne.value = 0.00;
+	document.theForm.rowTwo.value = 0.00;
+	document.theForm.rowThree.value = 0.00;
+	document.theForm.rowFour.value = 0.00;
+	document.theForm.rowFive.value = 0.00;
+	document.theForm.rowSix.value = 0.00;
+	document.theForm.rowSeven.value = 0.00;
+	document.theForm.rowEight.value = 0.00;
+	document.theForm.rowNine.value = 0.00;
+	document.theForm.Total.value = 0.00;
+}	
+		
+</script>
+
+<style type="text/css">
+body {border:0; padding:8px; margin:0; font-size:75%; font-family:Arial, Helvetica, sans-serif;}
+table, h2 {text-transform:uppercase; color:#f3b3ae;}
+p {font-family:Georgia; color:#666;}
+h2 {font-size:1.2em;}
+th {text-align:left; font-size:1.2em;}
+td {padding:5px 2px;}
+input {border:0; width:7em; font-weight:bold;}
+select {width:7em; text-transform:lowercase;}
+#border-box {padding:8px; border:2px solid #f3b3ae;}
+.blk {color:black;}
+.algnRt {text-align:right;}
+</style>
+</head>
+<body onload="populate()">
+<div id="border-box">
+<img src="wedding_h1.gif" width="338" height="39" alt="Wedding" />
+<h2>Generate an Estimate</h2>
+<p>Sugar paper custom wedding pricing is standardized - all pricing is determined by which pieces you need and the number of colors used on each piece.  With letterpress, the number of colors printed on each piece can dramatically alter the price.  All of our designs can be altered to be printed in 1, 2 or 3 colors.</p>
+<form name="theForm" action="#">
+		<table>
+			<tr>
+			<th>Stationery Item</th>
+			<th># Ink Colors</th>
+			<th>Qty</th>
+			<th>Price</th>
+			</tr>
+			
+			<tr>
+				<td>Invitation and Envelope</td>
+				<td>
+					<select name="inkColOne" onchange="calculateRowTotals(1);"></select>
+				</td>
+				<td>
+					<select name="qtyOne"  onchange="calculateRowTotals(1);"></select>
+				</td>
+				<td class="blk">$<input type=text id="rowOne" /></td>
+			</tr>
+		
+			<tr>
+				<td>Reply Card and Envelope</td>
+				<td>
+					<select name="inkColTwo" onchange="calculateRowTotals(2);"></select>
+				</td>
+				<td>
+					<select name="qtyTwo"  onchange="calculateRowTotals(2);"></select>
+				</td>
+				<td class="blk">$<input type=text id="rowTwo" /></td>
+			</tr>
+			
+			<tr>
+				<td>Reception Card</td>
+				<td>
+					<select name="inkColThree" onchange="calculateRowTotals(3);"></select>
+				</td>
+				<td>
+					<select name="qtyThree" onchange="calculateRowTotals(3);"></select>
+				</td>
+				<td class="blk">$<input type=text id="rowThree" /></td>
+			</tr>
+			
+			<tr>
+				<td>Direction Card</td>
+				<td>
+					<select name="inkColFour" onchange="calculateRowTotals(4);"></select>
+				</td>
+				<td>
+					<select name="qtyFour" onchange="calculateRowTotals(4);"></select>
+				</td>
+				<td class="blk">$<input type=text id="rowFour" /></td>
+			</tr>
+			
+			<tr>
+				<td>Accommodation Card</td>
+				<td>
+					<select name="inkColFive" onchange="calculateRowTotals(5);"></select>
+				</td>
+				<td>
+					<select name="qtyFive" onchange="calculateRowTotals(5);"></select>
+				</td>
+				<td class="blk">$<input type=text id="rowFive" /></td>
+			</tr>
+			
+			<tr>
+				<td>Menu Card</td>
+				<td>
+					<select name="inkColSix" onchange="calculateRowTotals(6);"></select>
+				</td>
+				<td>
+					<select name="qtySix" onchange="calculateRowTotals(6);"></select>
+				</td>
+				<td class="blk">$<input type=text id="rowSix" /></td>
+			</tr>
+			
+			<tr>
+				<td>Stationery and Envelope</td>
+				<td>
+					<select name="inkColSeven" onchange="calculateRowTotals(7);"></select>
+				</td>
+				<td>
+					<select name="qtySeven" onchange="calculateRowTotals(7);"></select>
+				</td>
+				<td class="blk">$<input type=text id="rowSeven" /></td>
+			</tr>
+			
+			<tr>
+				<td>Favor Tag</td>
+				<td>
+					<select name="inkColEight" onchange="calculateRowTotals(8);"></select>
+				</td>
+				<td>
+					<select name="qtyEight" onchange="calculateRowTotals(8);"></select>
+				</td>
+				<td class="blk">$<input type=text id="rowEight" /></td>
+			</tr>
+			
+			<tr>
+				<td>Program Cover</td>
+				<td>
+					<select name="inkColNine" onchange="calculateRowTotals(9);"></select>
+				</td>
+				<td>
+					<select name="qtyNine" onchange="calculateRowTotals(9);"></select>
+				</td>
+				<td class="blk">$<input type=text id="rowNine" /></td>
+			</tr>
+			<tr>
+				<td class="algnRt" colspan="3">Estimated Total:</td>
+				<td class="blk">$<input type=text id="Total" /></td>
+			</tr>
+		</table>
+
+
+	</form>
+<h2>Important note</h2>
+<p>Border cards, ribbon, eding, shipping and assembly is an additional fee.  Please contact the store to place a proper order and receive an exact estimate based on your specific request.</p>
+<h2>Timing</h2>
+<p>Sugar paper wedding orders ship 4 weeks after approval and most of the timing is based on you... In order to proces your order, we will need a typed copy of your specific wording for each piece of your invitation.  We have found that brides sometimes overlook how difficult it is to finalize the invitation wording, directions, accommodation information etc. Please place your order after you have finalized all of this information as we cannot begin your design process without it.  Please also note that the amount of changes you make during the design process will affect your turn-around time.</p>
+<h2>Rush Service</h2>
+<p>Sugar paper wedding orders can be rush printed with a fee of 40% of the total cost and envelopes can be sent ahead of time for a $125 flat fee.</p>
+</div>	
+</body>
+</html>
